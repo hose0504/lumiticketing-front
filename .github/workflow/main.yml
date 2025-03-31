@@ -21,9 +21,9 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Make ZIP (regular_back.zip)
+      - name: Make ZIP (regular_front.zip)
         run: |
-          zip -r regular_back.zip \
+          zip -r regular_front.zip \
             appspec.yml \
             pom.xml \
             scripts \
@@ -31,7 +31,7 @@ jobs:
             Dockerfile || true
 
       - name: Upload ZIP to S3
-        run: aws s3 cp regular_back.zip s3://lumiticketing-project-03230316/regular_back_build.zip
+        run: aws s3 cp regular_front.zip s3://lumiticketing-project-03230316/regular_front_build.zip
 
       - name: Trigger CodeDeploy
         env:
@@ -42,5 +42,5 @@ jobs:
             --application-name LumiTicketing \
             --deployment-group-name LumiTicketing-Group \
             --file-exists-behavior OVERWRITE \
-            --s3-location bucket=lumiticketing-project-03230316,bundleType=zip,key=regular_back_build.zip \
+            --s3-location bucket=lumiticketing-project-03230316,bundleType=zip,key=regular_front_build.zip \
             --region ap-northeast-2
