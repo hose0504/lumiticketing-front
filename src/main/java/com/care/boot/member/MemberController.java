@@ -85,15 +85,12 @@ public class MemberController {
 
     @PostMapping("vipPaymentProc")
     public String vipPaymentProc(RedirectAttributes ra) {
-//        String sessionId = (String) session.getAttribute("loginUser");
-        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
-        
-        if (loginUser == null) {
+        String sessionId = (String) session.getAttribute("id");
+        if (sessionId == null) {
             ra.addFlashAttribute("msg", "로그인이 필요합니다.");
-            return "redirect:https://login.lumiticketing.click/boot/index";
+            return "redirect:login";
         }
 
-        String sessionId = loginUser.getId();
         String msg = service.upgradeToVIP(sessionId);
         if (msg.equals("VIP 승격 완료!")) {
             session.invalidate();

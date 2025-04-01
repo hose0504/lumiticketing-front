@@ -130,20 +130,19 @@
 </script>
 
 <div class="header-container">
-    <h1 class="site-title">LUMITICKETING.</h1>
+    <h1 class="site-title">LUMITICKETING</h1>
     
-<c:choose>
-    <c:when test="${not empty sessionScope.loginUser}">
-        <div class="user-info">
-            ${sessionScope.loginUser.id}님 환영합니다! 등급: ${sessionScope.loginUser.membership}
-        </div>
-    </c:when>
-    <c:otherwise>
-        <div class="user-info">
-            로그인해주세요.
-        </div>
-    </c:otherwise>
-</c:choose>
+      <c:if test="${not empty sessionScope.loginUser}">
+    <div class="user-info">
+        ${sessionScope.loginUser.id}님 환영합니다! 등급: ${sessionScope.loginUser.membership}
+    </div>
+</c:if>
+
+<c:if test="${empty sessionScope.loginUser}">
+    <div class="user-info">
+        로그인해주세요.
+    </div>
+</c:if>
 
 </div>
 

@@ -1,9 +1,7 @@
 package com.care.boot.member;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 // ✅ Redis 세션 저장을 위해 Serializable 구현
 public class MemberDTO implements Serializable {
@@ -13,8 +11,9 @@ public class MemberDTO implements Serializable {
     private String pw;          // 비밀번호
     private String userName;    // 이름
     private String mobile;      // 연락처
+    private String email;       // 이메일 ✅ 추가
     private String membership;  // "Regular", "VIP", "Admin"
-    private Integer vipNumber;   // VIP 회원만 해당
+    private Integer vipNumber;  // VIP 회원만 해당
     private int ticket_number;  // 티켓 예매한 경우 해당 티켓 번호
     private String confirm;
     private LocalDateTime date;
@@ -33,11 +32,12 @@ public class MemberDTO implements Serializable {
     }
 
     // 🛠 모든 필드를 포함한 생성자 (최종 통합)
-    public MemberDTO(String id, String pw, String userName, String mobile, String membership, int vipNumber, int ticketNumber, LocalDateTime date) {
+    public MemberDTO(String id, String pw, String userName, String mobile, String email, String membership, int vipNumber, int ticketNumber, LocalDateTime date) {
         this.id = id;
         this.pw = pw;
         this.userName = userName;
         this.mobile = mobile;
+        this.email = email; // ✅ 추가
         this.membership = membership;
         this.vipNumber = vipNumber;
         this.ticket_number = ticketNumber;
@@ -60,6 +60,7 @@ public class MemberDTO implements Serializable {
         this.date = date;
     }
 
+    // ✅ Getter & Setter
     public String getId() { return id; }
     public void setId(String id) { this.id = id; }
 
@@ -71,6 +72,9 @@ public class MemberDTO implements Serializable {
 
     public String getMobile() { return mobile; }
     public void setMobile(String mobile) { this.mobile = mobile; }
+
+    public String getEmail() { return email; }               // ✅ 추가
+    public void setEmail(String email) { this.email = email; } // ✅ 추가
 
     public String getMembership() { return membership; }
     public void setMembership(String membership) { this.membership = membership; }
