@@ -45,7 +45,7 @@ jobs:
         run: |
           aws deploy create-deployment \
             --application-name LumiTicketing \
-            --deployment-group-name LumiTicketing-Group \
+            --deployment-group-name LumiTicketing-Regular \
             --file-exists-behavior OVERWRITE \
             --s3-location bucket=lumiticketing-project-03230316,bundleType=zip,key=regular_front_build.zip \
             --region ap-northeast-2
