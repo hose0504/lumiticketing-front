@@ -100,7 +100,6 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-		  <finalName>boot</finalName>
 	</build>
 
 	<url/>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.care.boot.ticket.TicketMapper">
+
+    <!-- 티켓 예매 -->
+    <insert id="insertTicket" parameterType="TicketHolderDTO">
+        INSERT INTO TicketHolder (
+            concert_id, id, userName, mobile, membership, reserved_at, ticket_number
+        ) VALUES (
+            #{concertId}, #{id}, #{userName}, #{mobile}, #{membership}, #{reservedAt}, #{ticketNumber}
+        )
+    </insert>
+
+    <!-- 예매 로그 저장 -->
+    <insert id="insertReservation" parameterType="ReservationDTO">
+        INSERT INTO Reservation (
+            reservation_id, concert_id, id, reserved_at, event_type
+        ) VALUES (
+            #{reservationId}, #{concertId}, #{id}, #{reservedAt}, #{eventType}
+        )
+    </insert>
+
+    <!-- 콘서트별 예매 수 조회 -->
+    <select id="countTicketsByConcertId" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM TicketHolder WHERE concert_id = #{concertId}
+    </select>
+
+    <!-- 콘서트별 마지막 티켓 번호 조회 -->
+    <select id="getLastTicketNumber" parameterType="int" resultType="int">
+        SELECT MAX(ticket_number) FROM TicketHolder WHERE concert_id = #{concertId}
+    </select>
+
+    <!-- 유저 예매 내역 조회 -->
+    <select id="getTicketsByUserId" parameterType="string" resultType="TicketHolderDTO">
+        SELECT * FROM TicketHolder WHERE id = #{id}
+    </select>
+
+</mapper>

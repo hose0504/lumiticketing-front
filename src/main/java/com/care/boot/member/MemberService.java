@@ -1,21 +1,19 @@
 package com.care.boot.member;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.ui.Model;
 import jakarta.servlet.http.HttpSession;
 
+import com.care.boot.ticket.TicketService;
+import com.care.boot.ticket.TicketHolderDTO;
+
 @Service
-
-
 public class MemberService {
     @Autowired private IMemberMapper mapper;
     @Autowired private HttpSession session;
 
+    @Autowired
+    private TicketService ticketService; // ✅ 티켓 서비스 의존성 주입
 
     public String upgradeToVIP(String sessionId) {
         System.out.println("===== [DEBUG] VIP 승격 요청 시작 =====");
@@ -51,27 +49,11 @@ public class MemberService {
         return "VIP 승격에 실패했습니다.";
     }
 
-    @Autowired
-    private IMemberMapper memberMapper;
-
     public boolean reserveTicket(String id) {
-        MemberDTO member = memberMapper.getMemberById(id);
-        if (member == null) return false; // 멤버 없으면 예매 불가
+        MemberDTO member = mapper.getMemberById(id);
+        if (member == null) return false;
 
-        int ticketNumber;
-        if ("VIP".equals(member.getMembership())) {
-            ticketNumber = memberMapper.getNextVipTicketNumber();
-        } else {
-            ticketNumber = memberMapper.getNextRegularTicketNumber();
-        }
-
-        return memberMapper.insertTicketHolder(member.getId(), member.getUserName(),
-                member.getMobile(), member.getMembership(), ticketNumber) > 0;
+        // ✅ TicketService에서 모든 로직 위임 처리
+        return ticketService.reserve(member);
     }
-    
-    
-
-    
-    
 }
-    
