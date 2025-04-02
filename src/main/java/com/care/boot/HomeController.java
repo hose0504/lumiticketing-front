@@ -20,7 +20,7 @@ public class HomeController {
             return "redirect:https://login.lumiticketing.click/boot/login";
         }
 
-        return "index";   // 너희 index.jsp 경로 확인 필요
+        return "jsp/index";   // 너희 index.jsp 경로 확인 필요
     }
 	
 	@RequestMapping("header")
