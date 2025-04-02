@@ -7,6 +7,7 @@ ZIP_FILE="/home/ubuntu/regular_front_build.zip"
 DEST_DIR="/home/ubuntu"
 
 rm /home/ubuntu/boot.war
+rm -r /opt/tomcat/tomcat-10/webapps/boot
 
 # 압축 풀기
 echo "압축을 풀고 있습니다..."
@@ -14,9 +15,9 @@ unzip -o $ZIP_FILE -d $DEST_DIR
 
 # boot.war가 존재하는지 확인
 if [ -f $DEST_DIR/boot.war ]; then
-    # 톰캣의 webapps 디렉토리로 boot.war 복사
-    echo "boot.war 파일을 톰캣 webapps로 복사 중..."
-    sudo cp $DEST_DIR/boot.war /opt/tomcat/tomcat-10/webapps/
+    # 톰캣의 webapps 디렉토리로 boot.war 옮기기
+    echo "boot.war 파일을 톰캣 webapps로 옮기는 중..."
+    sudo mv $DEST_DIR/boot.war /opt/tomcat/tomcat-10/webapps/
 else
     echo "boot.war 파일이 존재하지 않습니다!"
     exit 1
