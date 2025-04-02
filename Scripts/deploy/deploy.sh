@@ -6,6 +6,8 @@ ZIP_FILE="/home/ubuntu/regular_front_build.zip"
 # 압축을 풀 디렉터리
 DEST_DIR="/home/ubuntu"
 
+rm /home/ubuntu/boot.war
+
 # 압축 풀기
 echo "압축을 풀고 있습니다..."
 unzip -o $ZIP_FILE -d $DEST_DIR
