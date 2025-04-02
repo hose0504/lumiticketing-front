@@ -8,7 +8,7 @@ DEST_DIR="/home/ubuntu"
 
 rm /home/ubuntu/boot.war
 rm -r /opt/tomcat/tomcat-10/webapps/boot
-
+rm /opt/tomcat/tomcat-10/webapps/boot.war
 # 압축 풀기
 echo "압축을 풀고 있습니다..."
 unzip -o $ZIP_FILE -d $DEST_DIR
