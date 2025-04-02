@@ -19,41 +19,37 @@
 		DELETE FROM regularmember WHERE id=#{id}
 	</delete>
 
-<insert id="promoteToVIP">
-    INSERT INTO VIPMember (id, pw, userName, mobile, membership, vip_number)
-    SELECT id, pw, userName, mobile, 'VIP', 
-           (SELECT COALESCE(MAX(vip_number), 0) + 1 FROM VIPMember)
-    FROM RegularMember WHERE id = #{id};
-</insert>
+	<insert id="promoteToVIP">
+	    INSERT INTO VIPMember (id, pw, userName, mobile, membership, vip_number)
+	    SELECT id, pw, userName, mobile, 'VIP', 
+	           (SELECT COALESCE(MAX(vip_number), 0) + 1 FROM VIPMember)
+	    FROM RegularMember WHERE id = #{id};
+	</insert>
 
-<delete id="removeFromRegular">
-    DELETE FROM RegularMember WHERE id = #{id};
-</delete>
+	<delete id="removeFromRegular">
+	    DELETE FROM RegularMember WHERE id = #{id};
+	</delete>
 
-<select id="countVIPMembers" resultType="int">
-        SELECT COUNT(*) FROM VIPMember
-    </select>
+	<select id="countVIPMembers" resultType="int">
+	    SELECT COUNT(*) FROM VIPMember
+	</select>
 
- <update id="upgradeToVIP">
-        UPDATE VIPMember 
-        SET membership = 'VIP', vip_number = #{vipNumber} 
-        WHERE id = #{id}
-    </update>
+	<update id="upgradeToVIP">
+	    UPDATE VIPMember 
+	    SET membership = 'VIP', vip_number = #{vipNumber} 
+	    WHERE id = #{id}
+	</update>
 
+	<select id="getNextRegularTicketNumber" resultType="int">
+	    SELECT COALESCE(MIN(t.ticket_number + 1), 101)
+	    FROM TicketHolder t
+	    WHERE t.ticket_number BETWEEN 100 AND 5000 AND NOT EXISTS 
+	    (SELECT 1 FROM TicketHolder WHERE ticket_number = t.ticket_number + 1)
+	</select>
 
-<select id="getNextRegularTicketNumber" resultType="int">
-    SELECT COALESCE(MIN(t.ticket_number + 1), 101)
-    FROM TicketHolder t
-    WHERE t.ticket_number BETWEEN 100 AND 5000 AND NOT EXISTS 
-    (SELECT 1 FROM TicketHolder WHERE ticket_number = t.ticket_number + 1)
-</select>
-
-
-<resultMap id="vipMemberResultMap" type="MemberDTO">
-    <result property="vipNumber" column="vip_number"/>
-</resultMap>
-
+	<!-- ✅ 여기 고침 -->
+	<resultMap id="vipMemberResultMap" type="com.care.boot.member.MemberDTO">
+	    <result property="vipNumber" column="vip_number"/>
+	</resultMap>
 
 </mapper>
-
-
