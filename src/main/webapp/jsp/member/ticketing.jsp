@@ -16,15 +16,20 @@
         <table>
             <tr>
                 <td>
-                    <label for="concert">콘서트 선택:</label>
-                    <select name="concertId" id="concert" required>
-                        <option value="" disabled selected>콘서트를 선택하세요</option>
-                        <c:forEach var="concert" items="${concertList}">
-                            <option value="${concert.concertId}">
-                                ${concert.name} (${concert.date})
-                            </option>
-                        </c:forEach>
-                    </select>
+                    <c:if test="${not empty concertList}">
+                        <label for="concert">콘서트 선택:</label>
+                        <select name="concertId" id="concert" required>
+                            <option value="" disabled selected>콘서트를 선택하세요</option>
+                            <c:forEach var="concert" items="${concertList}">
+                                <option value="${concert.concertId}">
+                                    ${concert.name} (${concert.date})
+                                </option>
+                            </c:forEach>
+                        </select>
+                    </c:if>
+                    <c:if test="${empty concertList}">
+                        <p style="color: red;">콘서트 목록을 불러올 수 없습니다. 관리자에게 문의하세요.</p>
+                    </c:if>
                 </td>
             </tr>
 
