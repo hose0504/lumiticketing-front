@@ -20,15 +20,21 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: ⚙️ Maven 빌드 (.war 생성)
-        run: mvn clean package -DskipTests=true
+      - name: 🧹 Maven 클린
+        run: mvn clean
 
-      - name: ✅ AWS 인증 설정
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
+      - name: ⚙️ Maven 빌드 (.war 생성)
+        run: mvn package -DskipTests=true
+
+      - name: ✅ WAR 파일 존재 확인
+        run: |
+          if [ ! -f target/boot.war ]; then
+            echo "❌ boot.war 파일이 존재하지 않습니다!" >&2
+            exit 1
+          fi
+
+      - name: 🕒 배포 ZIP 파일 이름 생성 (타임스탬프 포함)
+        run: echo "ZIP_NAME=regular_front_$(date +'%Y%m%d-%H%M%S').zip" >> $GITHUB_ENV
 
       - name: 📦 배포 ZIP 만들기 (boot.war 포함)
         run: |
@@ -36,24 +42,26 @@ jobs:
           pwd
           echo "➡ target 디렉토리 내용:"
           ls -alh target/
-          
+
           mkdir deploy
           cp target/boot.war deploy/
-          
-          echo "➡ deploy 디렉토리 내용 (boot.war 포함):"
-          ls -alh deploy/
-          
           cp appspec.yml deploy/
           cp -r Scripts deploy/
-          cd deploy && zip -r regular_front.zip .
 
-      - name: 🔎 boot.war 내부 내용 확인
+          echo "➡ deploy 디렉토리 내용:"
+          ls -alh deploy/
+
+          cd deploy && zip -r $ZIP_NAME .
+
+      - name: 🔍 boot.war 내부 header.jsp 내용 확인
         run: |
-          unzip -l target/boot.war | grep header.jsp
-
+          mkdir extract && cp target/boot.war extract/ && cd extract
+          jar -xvf boot.war > /dev/null
+          echo "✅ header.jsp 내용 확인:"
+          grep 'LUMITICKETING' jsp/default/header.jsp || echo "⚠️ header.jsp 내용이 예상과 다릅니다!"
 
       - name: ☁️ S3로 업로드
-        run: aws s3 cp deploy/regular_front.zip s3://lumiticketing-project-03230316/regular_front_build.zip
+        run: aws s3 cp deploy/$ZIP_NAME s3://lumiticketing-project-03230316/$ZIP_NAME
 
       - name: 🚀 CodeDeploy 트리거
         run: |
@@ -61,5 +69,5 @@ jobs:
             --application-name LumiTicketing \
             --deployment-group-name LumiTicketing-Regular \
             --file-exists-behavior OVERWRITE \
-            --s3-location bucket=lumiticketing-project-03230316,bundleType=zip,key=regular_front_build.zip \
+            --s3-location bucket=lumiticketing-project-03230316,bundleType=zip,key=$ZIP_NAME \
             --region ap-northeast-2
