@@ -32,11 +32,21 @@ jobs:
 
       - name: 📦 배포 ZIP 만들기 (boot.war 포함)
         run: |
+          echo "➡ 현재 디렉토리:"
+          pwd
+          echo "➡ target 디렉토리 내용:"
+          ls -alh target/
+          
           mkdir deploy
           cp target/boot.war deploy/
+          
+          echo "➡ deploy 디렉토리 내용 (boot.war 포함):"
+          ls -alh deploy/
+          
           cp appspec.yml deploy/
           cp -r Scripts deploy/
           cd deploy && zip -r regular_front.zip .
+
 
       - name: ☁️ S3로 업로드
         run: aws s3 cp deploy/regular_front.zip s3://lumiticketing-project-03230316/regular_front_build.zip
