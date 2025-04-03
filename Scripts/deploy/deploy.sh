@@ -1,31 +1,24 @@
 #!/bin/bash
-
-set -e  # 에러 발생 시 스크립트 중단
+set -e
 
 echo "=== Lumiticketing 배포 시작 ==="
 
-# 1. 변수 설정
-ZIP_FILE="/home/ubuntu/regular_front_build.zip"
-DEST_DIR="/home/ubuntu"
+# 1. 변수 설정 (현재 디렉토리 기준)
+ZIP_FILE="./regular_front_build.zip"
+DEST_DIR="."
 TOMCAT_DIR="/opt/tomcat/tomcat-10/webapps"
 WAR_NAME="boot.war"
 
 # 2. 기존 파일 제거
-echo "[1/6] 기존 war 및 디렉토리 제거 중..."
-sudo rm -f "$DEST_DIR/$WAR_NAME"
-sudo rm -rf "$TOMCAT_DIR/boot"
+echo "[1/6] 기존 WAR 및 디렉토리 제거 중..."
 sudo rm -f "$TOMCAT_DIR/$WAR_NAME"
+sudo rm -rf "$TOMCAT_DIR/boot"
 
 # 3. 압축 해제
 echo "[2/6] 압축 해제 중..."
-if unzip -o "$ZIP_FILE" -d "$DEST_DIR"; then
-    echo "압축 해제 완료"
-else
-    echo "압축 해제 실패! 파일 경로 확인 필요: $ZIP_FILE"
-    exit 1
-fi
+unzip -o "$ZIP_FILE" -d "$DEST_DIR"
 
-# 4. war 파일 존재 여부 확인
+# 4. WAR 존재 확인
 if [ -f "$DEST_DIR/$WAR_NAME" ]; then
     echo "[3/6] $WAR_NAME 확인 완료"
 else
@@ -33,11 +26,12 @@ else
     exit 1
 fi
 
-# 5. 톰캣 webapps로 이동
+# 5. WAR 이동
 echo "[4/6] $WAR_NAME → Tomcat webapps로 이동 중..."
 sudo mv "$DEST_DIR/$WAR_NAME" "$TOMCAT_DIR/"
+sudo chown tomcat:tomcat "$TOMCAT_DIR/$WAR_NAME"
 
-# 6. 톰캣 재시작
+# 6. Tomcat 재시작
 echo "[5/6] Tomcat 재시작 중..."
 sudo systemctl restart tomcat
 
