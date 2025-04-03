@@ -49,15 +49,29 @@ public class TicketService {
     public boolean reserveTicket(MemberDTO member, int concertId) {
         int currentCount = getCurrentTicketCount(concertId);
 
-        int ticketNumber;
-        if ("VIP".equalsIgnoreCase(member.getMembership())) {
-            ticketNumber = member.getVipNumber();
-        } else if (currentCount >= 101 && currentCount <= 5000) {
-            ticketNumber = currentCount;
-        } else {
-            return false; // 예매 불가
+        if (currentCount >= 5000) {
+            return false; // 좌석 초과
         }
 
+        int ticketNumber;
+
+        if ("VIP".equalsIgnoreCase(member.getMembership())) {
+            if (member.getVipNumber() > 0 && member.getVipNumber() <= 100) {
+                ticketNumber = member.getVipNumber(); // VIP는 고정 번호 사용
+            } else {
+                return false; // 유효하지 않은 VIP 번호
+            }
+        } else {
+            // Regular는 101번부터 예매 가능
+            ticketNumber = currentCount + 1;
+
+            // Regular가 100번 이하 티켓을 받지 않도록 조정
+            if (ticketNumber <= 100) {
+                ticketNumber = 101;
+            }
+        }
+
+        // 예매 객체 생성
         TicketHolderDTO ticket = new TicketHolderDTO();
         ticket.setConcertId(concertId);
         ticket.setId(member.getId());
@@ -67,12 +81,14 @@ public class TicketService {
         ticket.setTicketNumber(ticketNumber);
         ticket.setReservedAt(LocalDateTime.now());
 
+        // 예매 로그
         ReservationDTO reservation = new ReservationDTO();
         reservation.setConcertId(concertId);
         reservation.setId(member.getId());
         reservation.setEventType("booking");
         reservation.setReservedAt(LocalDateTime.now());
 
+        // DB 등록
         ticketMapper.insertTicket(ticket);
         ticketMapper.insertReservation(reservation);
 
