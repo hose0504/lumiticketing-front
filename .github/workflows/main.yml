@@ -53,6 +53,7 @@ jobs:
 
           cd deploy && zip -r $ZIP_NAME .
 
+      
       - name: 🔍 boot.war 내부 header.jsp 내용 확인
         run: |
           mkdir extract && cp target/boot.war extract/ && cd extract
@@ -60,8 +61,16 @@ jobs:
           echo "✅ header.jsp 내용 확인:"
           grep 'LUMITICKETING' jsp/default/header.jsp || echo "⚠️ header.jsp 내용이 예상과 다릅니다!"
 
+      - name: ✅ AWS 인증 설정   # ← 이 부분 필수!!!
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-2
+
       - name: ☁️ S3로 업로드
         run: aws s3 cp deploy/$ZIP_NAME s3://lumiticketing-project-03230316/$ZIP_NAME
+...
 
       - name: 🚀 CodeDeploy 트리거
         run: |
