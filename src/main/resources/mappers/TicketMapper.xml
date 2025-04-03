@@ -49,11 +49,13 @@
         FROM Concert
     </select>
 
-<select id="findMemberById" parameterType="string" resultType="com.care.boot.member.MemberDTO">
-  SELECT * FROM RegularMember WHERE id = #{id}
-  UNION
-  SELECT * FROM VIPMember WHERE id = #{id}
-</select>
-
+    <!-- 유저 정보 조회 (RegularMember + VIPMember) -->
+    <select id="findMemberById" parameterType="string" resultType="com.care.boot.member.MemberDTO">
+        SELECT id, password, name, email, phone, membership, registered_at 
+        FROM RegularMember WHERE id = #{id}
+        UNION
+        SELECT id, password, name, email, phone, membership, registered_at 
+        FROM VIPMember WHERE id = #{id}
+    </select>
 
 </mapper>
