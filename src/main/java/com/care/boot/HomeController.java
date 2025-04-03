@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class HomeController {
 	
-    @RequestMapping("/boot/index")
+    @RequestMapping("index")
     public String index(HttpSession session, RedirectAttributes redirect) {
         MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
 
