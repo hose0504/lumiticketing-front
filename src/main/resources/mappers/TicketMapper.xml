@@ -49,7 +49,7 @@
         FROM Concert
     </select>
 
-<select id="findMemberById" parameterType="string" resultType="com.care.boot.ticket.MemberDTO">
+<select id="findMemberById" parameterType="string" resultType="com.care.boot.member.MemberDTO">
   SELECT * FROM RegularMember WHERE id = #{id}
   UNION
   SELECT * FROM VIPMember WHERE id = #{id}
