@@ -19,32 +19,32 @@ public class MemberController {
     @Autowired private TicketService ticketService;
     @Autowired private HttpSession session;
 
-    // 🔓 로그아웃
+    // 해외화 로그아웃
     @RequestMapping("logout")
     public String logout(RedirectAttributes ra, HttpSession session) {
         session.invalidate();
-        ra.addFlashAttribute("logoutMessage", "로그아웃되었습니다!");
+        ra.addFlashAttribute("logoutMessage", "\ub85c\uadf8\uc544\uc6c3\ub418\uc5c8\uc2b5\ub2c8\ub2e4!");
         return "redirect:https://login.lumiticketing.click/boot/index";
     }
 
-    // 💳 VIP 결제 페이지
+    // VIP 결제 페이지
     @RequestMapping("vipPayment")
     public String vipPayment(HttpSession session, RedirectAttributes redirect) {
         MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
         if (loginUser == null) {
-            redirect.addFlashAttribute("msg", "로그인 후 이용해주세요!");
+            redirect.addFlashAttribute("msg", "\ub85c\uadf8\uc778 \ud6c4 \uc774용\ud574주세요!");
             return "redirect:https://login.lumiticketing.click/boot/login";
         }
         return "member/vipPayment";
     }
 
-    // 🎫 티켓 예매 페이지 (드롭다운 있는 화면)
+    // 티켓 예매 페이지
     @RequestMapping("ticketing")
     public String ticketing(HttpSession session, RedirectAttributes redirect, Model model) {
         MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
 
         if (loginUser == null) {
-            redirect.addFlashAttribute("msg", "로그인 후 이용해주세요!");
+            redirect.addFlashAttribute("msg", "\ub85c\uadf8\uc778 \ud6c4 \uc774용\ud574주세요!");
             return "redirect:https://login.lumiticketing.click/boot/login";
         }
 
@@ -54,7 +54,7 @@ public class MemberController {
         return "member/ticketing";
     }
 
-    // ✅ 예매 처리
+    // 예매 처리
     @PostMapping("/reserveTicket")
     public String reserveTicket(@RequestParam("concertId") int concertId,
                                 HttpSession session,
@@ -63,39 +63,40 @@ public class MemberController {
         MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
 
         if (loginUser == null) {
-            redirect.addFlashAttribute("msg", "로그인 후 이용해주세요!");
+            redirect.addFlashAttribute("msg", "\ub85c\uadf8\uc778 \ud6c4 \uc774용\ud574주세요!");
             return "redirect:https://login.lumiticketing.click/boot/login";
         }
 
+        // id 드림으로 DB에서 정보 재확인 (필요시)
         String id = loginUser.getId();
         boolean success = ticketService.reserveTicket(concertId, id);
 
         if (success) {
-            redirect.addFlashAttribute("msg", "🎉 예매 성공!");
+            redirect.addFlashAttribute("msg", "\ud83c\udf89 \uc608\ub9e4 \uc131공!");
         } else {
-            redirect.addFlashAttribute("msg", "❌ 예매 실패! 좌석이 부족합니다.");
+            redirect.addFlashAttribute("msg", "\u274c \uc608\ub9e4 \uc2e4패! \uc88c석이 \ubd80족합니다.");
         }
 
         return "redirect:/ticketing";
     }
 
-    // 💳 VIP 결제 처리
+    // VIP 결제 처리
     @PostMapping("vipPaymentProc")
     public String vipPaymentProc(RedirectAttributes ra) {
         String sessionId = (String) session.getAttribute("id");
         if (sessionId == null) {
-            ra.addFlashAttribute("msg", "로그인이 필요합니다.");
+            ra.addFlashAttribute("msg", "\ub85c\uadf8\uc778이 \ud544요\ud569니다.");
             return "redirect:login";
         }
 
         String msg = memberService.upgradeToVIP(sessionId);
-        if (msg.equals("VIP 승격 완료!")) {
+        if (msg.equals("VIP \uc2b9격 \uc644료!")) {
             session.invalidate();
-            ra.addFlashAttribute("vipUpgradeMessage", "🎉 VIP로 승격되었습니다!");
+            ra.addFlashAttribute("vipUpgradeMessage", "\ud83c\udf89 VIP\ub85c \uc2b9격\ub418\uc5c8습\ub2c8다!");
             return "redirect:https://login.lumiticketing.click/boot/index";
         }
 
-        ra.addFlashAttribute("msg", "VIP 승격 실패!");
+        ra.addFlashAttribute("msg", "VIP \uc2b9격 \uc2e4패!");
         return "member/vipPayment";
     }
 }

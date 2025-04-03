@@ -49,4 +49,11 @@
         FROM Concert
     </select>
 
+<select id="findMemberById" parameterType="string" resultType="com.care.boot.ticket.MemberDTO">
+  SELECT * FROM RegularMember WHERE id = #{id}
+  UNION
+  SELECT * FROM VIPMember WHERE id = #{id}
+</select>
+
+
 </mapper>
