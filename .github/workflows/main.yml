@@ -33,8 +33,8 @@ jobs:
             exit 1
           fi
 
-      - name: 🕒 배포 ZIP 파일 이름 생성 (타임스탬프 포함)
-        run: echo "ZIP_NAME=regular_front_$(date +'%Y%m%d-%H%M%S').zip" >> $GITHUB_ENV
+      - name: 🕒 배포 ZIP 이름 고정 (CodeDeploy용)
+        run: echo "ZIP_NAME=regular_front_build.zip" >> $GITHUB_ENV
 
       - name: 📦 배포 ZIP 만들기 (boot.war 포함)
         run: |
@@ -53,7 +53,6 @@ jobs:
 
           cd deploy && zip -r $ZIP_NAME .
 
-      
       - name: 🔍 boot.war 내부 header.jsp 내용 확인
         run: |
           mkdir extract && cp target/boot.war extract/ && cd extract
@@ -61,7 +60,7 @@ jobs:
           echo "✅ header.jsp 내용 확인:"
           grep 'LUMITICKETING' jsp/default/header.jsp || echo "⚠️ header.jsp 내용이 예상과 다릅니다!"
 
-      - name: ✅ AWS 인증 설정   # ← 이 부분 필수!!!
+      - name: ✅ AWS 인증 설정
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
@@ -70,7 +69,6 @@ jobs:
 
       - name: ☁️ S3로 업로드
         run: aws s3 cp deploy/$ZIP_NAME s3://lumiticketing-project-03230316/$ZIP_NAME
-...
 
       - name: 🚀 CodeDeploy 트리거
         run: |
