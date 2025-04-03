@@ -1,11 +1,11 @@
 package com.care.boot.ticket;
 
+import com.care.boot.member.MemberDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.care.boot.member.MemberDTO;
-
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class TicketService {
@@ -13,34 +13,45 @@ public class TicketService {
     @Autowired
     private TicketMapper ticketMapper;
 
-    // ✅ 콘서트 ID 고정 (예: 첫 콘서트 ID = 1)
     private final int DEFAULT_CONCERT_ID = 1;
 
-    // 콘서트당 현재 티켓 수 조회
+    // ✅ 콘서트 전체 목록 조회 (티케팅 페이지용)
+    public List<ConcertDTO> getAllConcerts() {
+        return ticketMapper.selectAllConcerts();
+    }
+
+    // ✅ 현재 콘서트 예매 인원 수 조회
     public int getCurrentTicketCount(int concertId) {
         return ticketMapper.countTicketsByConcertId(concertId);
     }
 
-    // ✅ MemberService에서 호출할 수 있도록 concertId 없이 호출되는 메서드 추가
+    // ✅ 외부에서 MemberDTO만으로 호출할 수 있는 기본 예매 로직
     public boolean reserve(MemberDTO member) {
-        return bookTicket(member, DEFAULT_CONCERT_ID);
+        return reserveTicket(member, DEFAULT_CONCERT_ID);
     }
 
-    // 예매 처리
-    public boolean bookTicket(MemberDTO member, int concertId) {
+    // ✅ 컨트롤러에서 호출하는 용도 (id로 MemberDTO 조회해서 처리)
+    public boolean reserveTicket(int concertId, String userId) {
+        MemberDTO member = ticketMapper.findMemberById(userId);
+        if (member == null) {
+            return false;
+        }
+        return reserveTicket(member, concertId);
+    }
+
+    // ✅ 실제 예매 처리 로직
+    public boolean reserveTicket(MemberDTO member, int concertId) {
         int currentCount = getCurrentTicketCount(concertId);
 
-        // 티켓 번호 할당
         int ticketNumber;
         if ("VIP".equalsIgnoreCase(member.getMembership())) {
-            ticketNumber = member.getVipNumber(); // VIP는 고정 번호
+            ticketNumber = member.getVipNumber();
         } else if (currentCount >= 101 && currentCount <= 5000) {
             ticketNumber = currentCount;
         } else {
-            return false; // 티켓 없음
+            return false; // 예매 불가
         }
 
-        // TicketHolderDTO 구성
         TicketHolderDTO ticket = new TicketHolderDTO();
         ticket.setConcertId(concertId);
         ticket.setId(member.getId());
@@ -48,16 +59,14 @@ public class TicketService {
         ticket.setMobile(member.getMobile());
         ticket.setMembership(member.getMembership());
         ticket.setTicketNumber(ticketNumber);
-        ticket.setReservedAt(LocalDateTime.now()); // ✅ 예약 시간 추가
+        ticket.setReservedAt(LocalDateTime.now());
 
-        // 예약 로그용 DTO
         ReservationDTO reservation = new ReservationDTO();
         reservation.setConcertId(concertId);
         reservation.setId(member.getId());
         reservation.setEventType("booking");
         reservation.setReservedAt(LocalDateTime.now());
 
-        // INSERT 실행
         ticketMapper.insertTicket(ticket);
         ticketMapper.insertReservation(reservation);
 

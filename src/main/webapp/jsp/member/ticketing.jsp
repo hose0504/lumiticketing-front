@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:import url="/header" />
 
-<%-- 로그인 상태 확인 (세션에 저장된 ID 체크) --%>
 <c:if test="${empty sessionScope.id}">
     <script>
         alert("로그인을 해주세요!");
@@ -11,24 +10,39 @@
 </c:if>
 
 <div align="center">
-<table>
-	<tr><td>${msg }</td></tr>  
-	<tr><td>
-	<form action="${pageContext.request.contextPath}/reserveTicket" method="post">
-    <input type="submit" value="예매하기">
-<input type="button" value="메인으로가기" onclick="location.href='index'">
-</form>
-	</td></tr>
-</table>
+    <h2>🎫 콘서트 예매</h2>
+
+    <form action="${pageContext.request.contextPath}/reserveTicket" method="post">
+        <table>
+            <tr>
+                <td>
+                    <label for="concert">콘서트 선택:</label>
+                    <select name="concertId" id="concert" required>
+                        <option value="" disabled selected>콘서트를 선택하세요</option>
+                        <c:forEach var="concert" items="${concertList}">
+                            <option value="${concert.concertId}">
+                                ${concert.name} (${concert.date})
+                            </option>
+                        </c:forEach>
+                    </select>
+                </td>
+            </tr>
+
+            <tr>
+                <td align="center">
+                    <br>
+                    <input type="submit" value="예매하기">
+                    <input type="button" value="메인으로가기" onclick="location.href='index'">
+                </td>
+            </tr>
+
+            <c:if test="${not empty msg}">
+                <tr>
+                    <td align="center" style="color: green;">${msg}</td>
+                </tr>
+            </c:if>
+        </table>
+    </form>
 </div>
 
 <c:import url="/footer" />
-
-
-
-
-
-
-
-
-
