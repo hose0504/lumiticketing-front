@@ -38,4 +38,9 @@
         SELECT * FROM TicketHolder WHERE id = #{id}
     </select>
 
+<select id="getAllConcerts" resultType="com.care.boot.ticket.ConcertDTO">
+  SELECT * FROM concert
+</select>
+
+
 </mapper>

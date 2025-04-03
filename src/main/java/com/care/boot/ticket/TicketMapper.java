@@ -6,6 +6,9 @@ import java.util.List;
 
 @Mapper
 public interface TicketMapper {
+	
+	List<ConcertDTO> getAllConcerts();
+
     // 🎟 티켓 예매 등록
     void insertTicket(TicketHolderDTO ticket);
 
