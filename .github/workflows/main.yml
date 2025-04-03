@@ -10,6 +10,10 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      BUCKET_NAME: lumiticketing-project-03230316
+      ZIP_NAME: regular_front_build.zip
+
     steps:
       - name: 🧾 Checkout
         uses: actions/checkout@v3
@@ -33,24 +37,12 @@ jobs:
             exit 1
           fi
 
-      - name: 🕒 배포 ZIP 이름 고정 (CodeDeploy용)
-        run: echo "ZIP_NAME=regular_front_build.zip" >> $GITHUB_ENV
-
       - name: 📦 배포 ZIP 만들기 (boot.war 포함)
         run: |
-          echo "➡ 현재 디렉토리:"
-          pwd
-          echo "➡ target 디렉토리 내용:"
-          ls -alh target/
-
           mkdir deploy
           cp target/boot.war deploy/
           cp appspec.yml deploy/
           cp -r Scripts deploy/
-
-          echo "➡ deploy 디렉토리 내용:"
-          ls -alh deploy/
-
           cd deploy && zip -r $ZIP_NAME .
 
       - name: 🔍 boot.war 내부 header.jsp 내용 확인
@@ -68,16 +60,14 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: ☁️ S3로 업로드
-        run: |
-          Waws s3 cp deploy/$ZIP_NAME s3://lumiticketing-project-03230316/$ZIP_NAME
-          aws s3 cp s3://lumiticketing-project-03230316/$ZIP_NAME s3://lumiticketing-project-03230316/regular_front_build.zip
-
+        run: aws s3 cp deploy/$ZIP_NAME s3://$BUCKET_NAME/$ZIP_NAME
 
       - name: 🚀 CodeDeploy 트리거
         run: |
+          echo "배포 파일명: $ZIP_NAME"
           aws deploy create-deployment \
             --application-name LumiTicketing \
             --deployment-group-name LumiTicketing-Regular \
             --file-exists-behavior OVERWRITE \
-            --s3-location bucket=lumiticketing-project-03230316,bundleType=zip,key=$ZIP_NAME \
+            --s3-location bucket=$BUCKET_NAME,bundleType=zip,key=$ZIP_NAME \
             --region ap-northeast-2
