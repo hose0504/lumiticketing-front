@@ -46,7 +46,7 @@
             genre,
             location,
             date
-        FROM concert
+        FROM Concert
     </select>
 
 </mapper>
