@@ -49,15 +49,16 @@
         FROM Concert
     </select>
 
-    <!-- 유저 정보 조회 (RegularMember + VIPMember 통합) -->
-    <select id="findMemberById" parameterType="string" resultType="com.care.boot.member.MemberDTO">
-        SELECT id, NULL AS password, name, email, phone, membership, registered_at
+    <!-- RegularMember에서 유저 정보 조회 -->
+    <select id="findRegularMemberById" parameterType="string" resultType="com.care.boot.member.MemberDTO">
+        SELECT id, pw AS password, userName, mobile, membership, email
         FROM RegularMember
         WHERE id = #{id}
-        
-        UNION
-        
-        SELECT id, password, name, email, phone, membership, registered_at
+    </select>
+
+    <!-- VIPMember에서 유저 정보 조회 -->
+    <select id="findVipMemberById" parameterType="string" resultType="com.care.boot.member.MemberDTO">
+        SELECT id, pw AS password, userName, mobile, membership, email
         FROM VIPMember
         WHERE id = #{id}
     </select>

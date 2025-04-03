@@ -6,8 +6,10 @@ import java.util.List;
 
 @Mapper
 public interface TicketMapper {
-	
-	List<ConcertDTO> getAllConcerts();
+
+    // ✅ 콘서트 전체 목록 조회 (드롭다운용)
+    List<ConcertDTO> getAllConcerts();
+    List<ConcertDTO> selectAllConcerts(); // 혹시 모르니 남겨둠
 
     // 🎟 티켓 예매 등록
     void insertTicket(TicketHolderDTO ticket);
@@ -24,9 +26,9 @@ public interface TicketMapper {
     // 🔎 유저별 예매 내역 조회
     List<TicketHolderDTO> getTicketsByUserId(String id);
 
-    // ✅ 콘서트 전체 목록 조회 (드롭다운용)
-    List<ConcertDTO> selectAllConcerts();
+    // ✅ 유저 ID로 Regular 조회
+    MemberDTO findRegularMemberById(String id);
 
-    // ✅ 유저 ID로 Regular/VIP 통합 조회 (예매 시 MemberDTO 확보)
-    MemberDTO findMemberById(String id);
+    // ✅ 유저 ID로 VIP 조회
+    MemberDTO findVipMemberById(String id);
 }

@@ -32,10 +32,16 @@ public class TicketService {
 
     // ✅ 컨트롤러에서 호출하는 용도 (id로 MemberDTO 조회해서 처리)
     public boolean reserveTicket(int concertId, String userId) {
-        MemberDTO member = ticketMapper.findMemberById(userId);
+        MemberDTO member = ticketMapper.findRegularMemberById(userId);
+
+        if (member == null) {
+            member = ticketMapper.findVipMemberById(userId);
+        }
+
         if (member == null) {
             return false;
         }
+
         return reserveTicket(member, concertId);
     }
 
