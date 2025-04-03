@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class TicketService {
@@ -63,11 +64,11 @@ public class TicketService {
             }
         } else {
             // Regular는 101번부터 예매 가능
-            ticketNumber = currentCount + 1;
-
-            // Regular가 100번 이하 티켓을 받지 않도록 조정
-            if (ticketNumber <= 100) {
+            Integer lastNumber = ticketMapper.getLastTicketNumber(concertId);
+            if (lastNumber == null || lastNumber < 100) {
                 ticketNumber = 101;
+            } else {
+                ticketNumber = lastNumber + 1;
             }
         }
 
@@ -83,6 +84,7 @@ public class TicketService {
 
         // 예매 로그
         ReservationDTO reservation = new ReservationDTO();
+        reservation.setReservationId(UUID.randomUUID().toString()); // ❗ 필수!
         reservation.setConcertId(concertId);
         reservation.setId(member.getId());
         reservation.setEventType("booking");
