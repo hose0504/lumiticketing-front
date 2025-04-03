@@ -47,6 +47,10 @@ jobs:
           cp -r Scripts deploy/
           cd deploy && zip -r regular_front.zip .
 
+      - name: 🔎 boot.war 내부 내용 확인
+        run: |
+          unzip -l target/boot.war | grep header.jsp
+
 
       - name: ☁️ S3로 업로드
         run: aws s3 cp deploy/regular_front.zip s3://lumiticketing-project-03230316/regular_front_build.zip
