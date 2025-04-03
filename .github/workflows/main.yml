@@ -68,7 +68,10 @@ jobs:
           aws-region: ap-northeast-2
 
       - name: ☁️ S3로 업로드
-        run: aws s3 cp deploy/$ZIP_NAME s3://lumiticketing-project-03230316/$ZIP_NAME
+        run: |
+          Waws s3 cp deploy/$ZIP_NAME s3://lumiticketing-project-03230316/$ZIP_NAME
+          aws s3 cp s3://lumiticketing-project-03230316/$ZIP_NAME s3://lumiticketing-project-03230316/regular_front_build.zip
+
 
       - name: 🚀 CodeDeploy 트리거
         run: |
