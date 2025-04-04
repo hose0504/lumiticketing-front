@@ -56,9 +56,9 @@
         WHERE id = #{id}
     </select>
 
-    <!-- VIPMember에서 유저 정보 조회 -->
+    <!-- VIPMember에서 유저 정보 조회 (vipNumber 필드 포함) -->
     <select id="findVipMemberById" parameterType="string" resultType="com.care.boot.member.MemberDTO">
-        SELECT id, pw AS password, userName, mobile, membership, email
+        SELECT id, pw AS password, userName, mobile, membership, email, vip_number AS vipNumber
         FROM VIPMember
         WHERE id = #{id}
     </select>

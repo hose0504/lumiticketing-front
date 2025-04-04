@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 public class TicketService {
@@ -84,7 +83,7 @@ public class TicketService {
 
         // 예매 로그
         ReservationDTO reservation = new ReservationDTO();
-        reservation.setReservationId(UUID.randomUUID().toString()); // ❗ 필수!
+        reservation.setReservationId(System.currentTimeMillis()); // ✔ 숫자 ID 사용
         reservation.setConcertId(concertId);
         reservation.setId(member.getId());
         reservation.setEventType("booking");
