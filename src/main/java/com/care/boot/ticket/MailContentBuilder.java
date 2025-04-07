@@ -12,8 +12,9 @@ public class MailContentBuilder {
     public static String build(String templatePath, Map<String, String> values) {
         try {
             // static 폴더의 mail.html 읽기
-            ClassPathResource resource = new ClassPathResource("static/" + templatePath);
-            String content = Files.readString(resource.getFile().toPath(), StandardCharsets.UTF_8);
+        	ClassPathResource resource = new ClassPathResource("static/" + templatePath);
+        	String content = new String(resource.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+
 
             // ${key} 형태의 변수 치환
             for (Map.Entry<String, String> entry : values.entrySet()) {
