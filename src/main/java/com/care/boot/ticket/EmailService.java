@@ -59,7 +59,7 @@ public class EmailService {
             SendEmailRequest emailRequest = SendEmailRequest.builder()
                     .destination(destination)
                     .message(message)
-                    .source("your_verified_email@example.com") // 실제 인증된 SES 주소
+                    .source("victor1919@naver.com") // 실제 인증된 SES 주소
                     .build();
 
             sesClient.sendEmail(emailRequest);
