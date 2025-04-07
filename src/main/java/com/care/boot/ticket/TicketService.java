@@ -67,7 +67,11 @@ public class TicketService {
 
         // 🎯 concertName 조회
         
-        ConcertDTO selectConcertById(int concertId);
+        ConcertDTO concert = ticketMapper.selectAllConcerts()
+                .stream()
+                .filter(c -> c.getId() == concertId)
+                .findFirst()
+                .orElse(null);
 
       
         String concertName = (concert != null) ? concert.getName() : "알 수 없음";
