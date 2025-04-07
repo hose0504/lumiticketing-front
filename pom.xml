@@ -36,7 +36,8 @@
             <type>pom</type>
             <scope>import</scope>
         </dependency>
-        
+        </dependencies>
+           </dependencyManagement>
 
     <!-- SES SDK -->
     <dependency>
@@ -52,7 +53,7 @@
     </dependency>
 
 
-              
+            <dependencies>  
 		
 	<dependency>
     <groupId>com.amazonaws</groupId>
@@ -151,7 +152,7 @@
         </dependency>
     </dependencies>
     
-    </dependencyManagement>
+ 
 
     <build>
         <finalName>boot</finalName> <!-- ✅ boot.war 로 생성됨 -->
