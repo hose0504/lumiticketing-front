@@ -17,6 +17,7 @@ import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsPro
 import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.*;
+import software.amazon.awssdk.auth.credentials.DefaultCredentialsProvider;
 
 @Service
 public class EmailService {
@@ -26,7 +27,7 @@ public class EmailService {
     public EmailService() {
         this.sesClient = SesClient.builder()
                 .region(Region.AP_NORTHEAST_2) // 서울 리전
-                .credentialsProvider(EnvironmentVariableCredentialsProvider.create()) // 환경변수 기반 인증
+                .credentialsProvider(DefaultCredentialsProvider.create()) // 환경변수 기반 인증
                 .build();
     }
 
