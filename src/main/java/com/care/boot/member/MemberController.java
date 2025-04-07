@@ -55,7 +55,7 @@ public class MemberController {
     }
 
     // 예매 처리
-    @PostMapping("/reserveTicket")
+    @RequestMapping(value = "/reserveTicket", method = {RequestMethod.GET, RequestMethod.POST})
     public String reserveTicket(@RequestParam("concertId") int concertId,
                                 HttpSession session,
                                 RedirectAttributes redirect) {
@@ -99,4 +99,39 @@ public class MemberController {
         ra.addFlashAttribute("msg", "VIP \uc2b9격 \uc2e4패!");
         return "member/vipPayment";
     }
+    
+    @RequestMapping("/goPayment")
+    public String goPayment(@RequestParam("concertId") int concertId,
+                            HttpSession session,
+                            RedirectAttributes redirect,
+                            Model model) {
+        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            redirect.addFlashAttribute("msg", "로그인 후 이용해주세요!");
+            return "redirect:https://login.lumiticketing.click/boot/login";
+        }
+
+        model.addAttribute("concertId", concertId); // JSP로 넘김
+        return "member/ticketingPayment"; // JSP 경로
+    }
+    
+    @PostMapping("/ticketingPaymentProc")
+    public String ticketingPaymentProc(@RequestParam("cardNumber") String cardNumber,
+                                       @RequestParam("expiryDate") String expiryDate,
+                                       @RequestParam("cvc") String cvc,
+                                       @RequestParam("address") String address,
+                                       @RequestParam("concertId") int concertId,
+                                       HttpSession session,
+                                       RedirectAttributes redirect) {
+        MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
+        if (loginUser == null) {
+            redirect.addFlashAttribute("msg", "로그인 후 이용해주세요!");
+            return "redirect:https://login.lumiticketing.click/boot/login";
+        }
+
+        // 카드 결제 성공 가정
+        return "redirect:/reserveTicket?concertId=" + concertId;
+    }
+
+
 }

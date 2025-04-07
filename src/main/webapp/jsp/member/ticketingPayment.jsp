@@ -54,6 +54,8 @@
 
             <label>청구 주소:</label>
             <input type="text" id="address" name="address" placeholder="주소 입력" required>
+            <input type="hidden" name="concertId" value="${concertId}">
+            
 
             <button type="button" onclick="validatePayment()">결제하기</button>
         </form>
