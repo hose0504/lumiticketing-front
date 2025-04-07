@@ -48,7 +48,6 @@ public class TicketService {
     // ✅ 실제 예매 처리 로직
     public boolean reserveTicket(MemberDTO member, int concertId) {
         int currentCount = getCurrentTicketCount(concertId);
-
         if (currentCount >= 5000) {
             return false; // 좌석 초과
         }
@@ -62,37 +61,38 @@ public class TicketService {
                 return false; // 유효하지 않은 VIP 번호
             }
         } else {
-            // Regular는 101번부터 예매 가능
             Integer lastNumber = ticketMapper.getLastTicketNumber(concertId);
-            if (lastNumber == null || lastNumber < 100) {
-                ticketNumber = 101;
-            } else {
-                ticketNumber = lastNumber + 1;
-            }
+            ticketNumber = (lastNumber == null || lastNumber < 100) ? 101 : lastNumber + 1;
         }
 
-        // 예매 객체 생성
+        // 🎯 concertName 조회
+        ConcertDTO concert = ticketMapper.selectConcertById(concertId);
+        String concertName = (concert != null) ? concert.getName() : "알 수 없음";
+
+        // ✅ 예매 객체 생성
         TicketHolderDTO ticket = new TicketHolderDTO();
         ticket.setConcertId(concertId);
+        ticket.setConcertName(concertName);                   // 추가된 필드
         ticket.setId(member.getId());
         ticket.setUserName(member.getUserName());
         ticket.setMobile(member.getMobile());
+        ticket.setEmail(member.getEmail());                   // 추가된 필드
         ticket.setMembership(member.getMembership());
         ticket.setTicketNumber(ticketNumber);
         ticket.setReservedAt(LocalDateTime.now());
 
-        // 예매 로그
+        // ✅ 예매 로그 객체 생성
         ReservationDTO reservation = new ReservationDTO();
-        reservation.setReservationId(System.currentTimeMillis()); // ✔ 숫자 ID 사용
+        reservation.setReservationId(System.currentTimeMillis());
         reservation.setConcertId(concertId);
         reservation.setId(member.getId());
         reservation.setEventType("booking");
         reservation.setReservedAt(LocalDateTime.now());
 
-        // DB 등록
+        // ✅ DB 등록
         ticketMapper.insertTicket(ticket);
         ticketMapper.insertReservation(reservation);
 
         return true;
     }
-}
+

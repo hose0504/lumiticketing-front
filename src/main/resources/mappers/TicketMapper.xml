@@ -6,13 +6,14 @@
 <mapper namespace="com.care.boot.ticket.TicketMapper">
 
     <!-- 티켓 예매 -->
-    <insert id="insertTicket" parameterType="com.care.boot.ticket.TicketHolderDTO">
-        INSERT INTO TicketHolder (
-            concert_id, id, userName, mobile, membership, reserved_at, ticket_number
-        ) VALUES (
-            #{concertId}, #{id}, #{userName}, #{mobile}, #{membership}, #{reservedAt}, #{ticketNumber}
-        )
-    </insert>
+<insert id="insertTicket" parameterType="com.care.boot.ticket.TicketHolderDTO">
+    INSERT INTO TicketHolder (
+        concert_id, concert_name, id, userName, mobile, email, membership, reserved_at, ticket_number
+    ) VALUES (
+        #{concertId}, #{concertName}, #{id}, #{userName}, #{mobile}, #{email}, #{membership}, #{reservedAt}, #{ticketNumber}
+    )
+</insert>
+
 
     <!-- 예매 로그 저장 -->
     <insert id="insertReservation" parameterType="com.care.boot.ticket.ReservationDTO">
