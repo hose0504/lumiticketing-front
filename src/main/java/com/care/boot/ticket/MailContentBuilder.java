@@ -1,4 +1,4 @@
-package com.care.boot.util;
+package com.care.boot.ticket;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

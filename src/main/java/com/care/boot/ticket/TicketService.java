@@ -6,6 +6,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.time.format.DateTimeFormatter;
+import com.care.boot.ticket.MailContentBuilder;
+
+
 
 @Service
 
@@ -13,6 +18,8 @@ public class TicketService {
 
     @Autowired
     private TicketMapper ticketMapper;
+    private EmailService emailService;
+
 
     private final int DEFAULT_CONCERT_ID = 1;
 
