@@ -18,6 +18,7 @@ public class TicketService {
 
     @Autowired
     private TicketMapper ticketMapper;
+    @Autowired
     private EmailService emailService;
 
 
@@ -117,8 +118,8 @@ public class TicketService {
                 "reservationTime", ticket.getReservedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
             );
 
-            String templatePath = "src/main/resources/templates/email/ticket-confirmation.html";
-            String emailBody = MailContentBuilder.build(templatePath, values);
+            String emailBody = MailContentBuilder.build("mail.html", valuesMap);
+
 
             emailService.sendEmail(
                 member.getEmail(),
