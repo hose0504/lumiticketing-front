@@ -66,7 +66,7 @@ public class TicketService {
         }
 
         // 🎯 concertName 조회
-        ConcertDTO concert = ticketMapper.selectAllConcerts();
+        
         ConcertDTO selectConcertById(int concertId);
 
       
