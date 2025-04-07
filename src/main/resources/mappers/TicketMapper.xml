@@ -48,8 +48,12 @@
             location,
             date
         FROM Concert
-         WHERE concert_id = #{concertId}
     </select>
+    
+    <select id="selectConcertById" resultType="com.care.boot.ticket.ConcertDTO">
+    SELECT * FROM concert WHERE concert_id = #{concertId}
+</select>
+    
 
     <!-- RegularMember에서 유저 정보 조회 -->
     <select id="findRegularMemberById" parameterType="string" resultType="com.care.boot.member.MemberDTO">
