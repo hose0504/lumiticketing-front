@@ -118,7 +118,8 @@ public class TicketService {
                 "reservationTime", ticket.getReservedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
             );
 
-            String emailBody = MailContentBuilder.build("mail.html", valuesMap);
+         
+            String emailBody = MailContentBuilder.build("mail.html", values);
 
 
             emailService.sendEmail(
