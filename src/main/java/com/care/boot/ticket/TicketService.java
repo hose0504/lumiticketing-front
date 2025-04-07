@@ -69,7 +69,7 @@ public class TicketService {
         
         ConcertDTO concert = ticketMapper.selectAllConcerts()
                 .stream()
-                .filter(c -> c.getId() == concertId)
+                .filter(c -> c.getConcertId() == concertId) 
                 .findFirst()
                 .orElse(null);
 
