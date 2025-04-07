@@ -17,6 +17,14 @@ import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.ses.SesClient;
 import software.amazon.awssdk.services.ses.model.*;
 
+package com.care.boot.ticket;
+
+import org.springframework.stereotype.Service;
+import software.amazon.awssdk.auth.credentials.EnvironmentVariableCredentialsProvider;
+import software.amazon.awssdk.regions.Region;
+import software.amazon.awssdk.services.ses.SesClient;
+import software.amazon.awssdk.services.ses.model.*;
+
 @Service
 public class EmailService {
 
@@ -57,7 +65,7 @@ public class EmailService {
             SendEmailRequest emailRequest = SendEmailRequest.builder()
                     .destination(destination)
                     .message(message)
-                    .source("your_verified_email@example.com") // ✅ SES에서 인증된 이메일
+                    .source("your_verified_email@example.com") // 실제 인증된 SES 주소
                     .build();
 
             sesClient.sendEmail(emailRequest);
@@ -69,5 +77,4 @@ public class EmailService {
         }
     }
 }
-
 
