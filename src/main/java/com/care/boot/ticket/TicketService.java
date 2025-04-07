@@ -66,7 +66,7 @@ public class TicketService {
         }
 
         // 🎯 concertName 조회
-        ConcertDTO concert = ticketMapper.selectConcertById(concertId);
+        ConcertDTO concert = ticketMapper.selectAllConcerts(concertId);
         String concertName = (concert != null) ? concert.getName() : "알 수 없음";
 
         // ✅ 예매 객체 생성
