@@ -48,6 +48,7 @@
             location,
             date
         FROM Concert
+         WHERE concert_id = #{concertId}
     </select>
 
     <!-- RegularMember에서 유저 정보 조회 -->
