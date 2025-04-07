@@ -8,6 +8,59 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+
+public class EmailService {
+
+    private final SesClient sesClient;
+
+    public EmailService() {
+        this.sesClient = SesClient.builder()
+                .region(Region.AP_NORTHEAST_2) // 서울 리전
+                .credentialsProvider(EnvironmentVariableCredentialsProvider.create()) // 환경변수 기반 인증
+                .build();
+    }
+
+    public void sendEmail(String toAddress, String subject, String htmlBody) {
+        try {
+            Destination destination = Destination.builder()
+                    .toAddresses(toAddress)
+                    .build();
+
+            Content contentSubject = Content.builder()
+                    .data(subject)
+                    .charset("UTF-8")
+                    .build();
+
+            Content contentBody = Content.builder()
+                    .data(htmlBody)
+                    .charset("UTF-8")
+                    .build();
+
+            Body body = Body.builder()
+                    .html(contentBody)
+                    .build();
+
+            Message message = Message.builder()
+                    .subject(contentSubject)
+                    .body(body)
+                    .build();
+
+            SendEmailRequest emailRequest = SendEmailRequest.builder()
+                    .destination(destination)
+                    .message(message)
+                    .source("your_verified_email@example.com") // ✅ SES에서 인증된 이메일
+                    .build();
+
+            sesClient.sendEmail(emailRequest);
+
+            System.out.println("✅ 이메일 전송 성공: " + toAddress);
+
+        } catch (SesException e) {
+            System.err.println("❌ 이메일 전송 실패: " + e.awsErrorDetails().errorMessage());
+        }
+    }
+}
+
 public class TicketService {
 
     @Autowired
@@ -99,6 +152,28 @@ public class TicketService {
         // ✅ DB 등록
         ticketMapper.insertTicket(ticket);
         ticketMapper.insertReservation(reservation);
+        
+        if (concert != null) {
+            Map<String, String> values = Map.of(
+                "userName", member.getUserName(),
+                "concertName", concert.getName(),
+                "concertDate", concert.getDate(),
+                "venue", concert.getLocation(),  // 📌 DB에선 'location' 컬럼
+                "reservationTime", ticket.getReservedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"))
+            );
+
+            String templatePath = "src/main/resources/templates/email/ticket-confirmation.html";
+            String emailBody = MailContentBuilder.build(templatePath, values);
+
+            emailService.sendEmail(
+                member.getEmail(),
+                "[루미티켓팅] 예매 확인 메일",
+                emailBody
+            );
+        }
+
+        return true;
+    }
 
         return true;
     }

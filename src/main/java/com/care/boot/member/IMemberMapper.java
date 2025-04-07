@@ -39,6 +39,8 @@ public interface IMemberMapper {
                            @Param("ticketNumber") int ticketNumber);
 
     int getNextVipTicketNumber();
+    
+    
 
     int getNextRegularTicketNumber();
 
