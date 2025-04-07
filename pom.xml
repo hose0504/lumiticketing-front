@@ -27,8 +27,6 @@
 <dependencyManagement>
     <dependencies>
 		
-		
-		
 		  <dependency>
             <groupId>software.amazon.awssdk</groupId>
             <artifactId>bom</artifactId>
@@ -38,7 +36,7 @@
         </dependency>
         </dependencies>
            </dependencyManagement>
-
+ <dependencies>  
     <!-- SES SDK -->
     <dependency>
         <groupId>software.amazon.awssdk</groupId>
@@ -53,7 +51,7 @@
     </dependency>
 
 
-            <dependencies>  
+           
 		
 	<dependency>
     <groupId>com.amazonaws</groupId>
