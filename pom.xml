@@ -24,10 +24,37 @@
     </properties>
     
     
-
+<dependencyManagement>
     <dependencies>
 		
-		    <dependency>
+		
+		
+		  <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>bom</artifactId>
+            <version>2.25.6</version> <!-- 또는 최신 안정 버전 -->
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+        
+
+    <!-- SES SDK -->
+    <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>ses</artifactId>
+    </dependency>
+
+    <!-- Jakarta Mail (HTML 메일 작성용) -->
+    <dependency>
+        <groupId>com.sun.mail</groupId>
+        <artifactId>jakarta.mail</artifactId>
+        <version>2.0.1</version>
+    </dependency>
+
+
+              
+		
+	<dependency>
     <groupId>com.amazonaws</groupId>
     <artifactId>aws-java-sdk-ses</artifactId>
     <version>1.12.698</version> <!-- 최신 버전 확인 가능 -->
@@ -123,6 +150,8 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    
+    </dependencyManagement>
 
     <build>
         <finalName>boot</finalName> <!-- ✅ boot.war 로 생성됨 -->
