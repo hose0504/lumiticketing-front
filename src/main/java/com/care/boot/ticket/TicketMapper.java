@@ -19,6 +19,9 @@ public interface TicketMapper {
 
     // 🔍 특정 콘서트의 예매 수 조회
     int countTicketsByConcertId(int concertId);
+    
+    ConcertDTO selectConcertById(int concertId);
+
 
     // 📌 콘서트별 마지막 티켓 번호 조회
     Integer getLastTicketNumber(int concertId);
