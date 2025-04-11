@@ -1,6 +1,10 @@
 package com.care.boot.member;
 
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.care.boot.ticket.TicketService;
 import com.care.boot.ticket.ConcertDTO;
+import com.care.boot.ticket.ReservationDTO;
 import com.care.boot.member.MemberDTO;
 
 @Controller
@@ -139,5 +144,31 @@ public class MemberController {
         MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
         return (user == null) ? "session not found" : user.toString();
     }
+    
+    @RequestMapping("boot")
+    @GetMapping("/export-reservations")
+    public void exportReservations(HttpServletResponse response) throws IOException {
+        List<ReservationDTO> list = ticketService.getAllReservations();
 
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=\"reservations.csv\"");
+
+        PrintWriter writer = response.getWriter();
+        writer.println("reservation_id,concert_id,id,event_type,reserved_at");
+
+        for (ReservationDTO r : list) {
+            writer.println(String.format("%d,%d,%s,%s,%s",
+                r.getReservationId(),
+                r.getConcertId(),
+                r.getId(),
+                r.getEventType(),
+                r.getReservedAt()
+            ));
+        }
+
+        writer.flush();
+    }
+
+
+    
 }
