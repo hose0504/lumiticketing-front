@@ -133,5 +133,11 @@ public class MemberController {
         return "redirect:/reserveTicket?concertId=" + concertId;
     }
 
+    @GetMapping("/test-session")
+    @ResponseBody
+    public String testSession(HttpSession session) {
+        MemberDTO user = (MemberDTO) session.getAttribute("loginUser");
+        return (user == null) ? "session not found" : user.toString();
+    }
 
 }

@@ -51,5 +51,9 @@
 	<resultMap id="vipMemberResultMap" type="com.care.boot.member.MemberDTO">
 	    <result property="vipNumber" column="vip_number"/>
 	</resultMap>
+	
+	<select id="login" parameterType="String" resultType="com.care.boot.member.MemberDTO">
+    SELECT * FROM RegularMember WHERE id = #{id}
+</select>
 
 </mapper>
