@@ -169,7 +169,6 @@ public class MemberController {
         writer.flush();
     }
 
-    List<ReservationDTO> list = ticketService.getAllReservations();
 
     
 }
