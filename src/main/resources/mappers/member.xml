@@ -16,14 +16,16 @@
 
 	<!-- 회원 삭제 -->
 	<delete id="deleteProc">
-		DELETE FROM regularmember WHERE id=#{id}
+		DELETE FROM RegularMember WHERE id=#{id}
 	</delete>
 
 	<insert id="promoteToVIP">
-	    INSERT INTO VIPMember (id, pw, userName, mobile, membership, vip_number)
-	    SELECT id, pw, userName, mobile, 'VIP', 
-	           (SELECT COALESCE(MAX(vip_number), 0) + 1 FROM VIPMember)
-	    FROM RegularMember WHERE id = #{id};
+	   INSERT INTO VIPMember (id, pw, userName, mobile, membership, vip_number, email)
+  SELECT id, pw, userName, mobile, 'VIP',
+         (SELECT COALESCE(MAX(vip_number), 0) + 1 FROM VIPMember),
+         email
+  FROM RegularMember
+  WHERE id = #{id};
 	</insert>
 
 	<delete id="removeFromRegular">
