@@ -69,18 +69,17 @@
         WHERE id = #{id}
     </select>
 
-	<resultMap id="reservationResultMap" type="com.care.boot.ticket.ReservationDTO">
-    <result column="reservation_id" property="reservationId"/>
-    <result column="concert_id" property="concertId"/>
-    <result column="id" property="id"/>
-    <result column="event_type" property="eventType"/>
-    <result column="reserved_at" property="reservedAt"/>
-</resultMap>
+    <resultMap id="reservationResultMap" type="com.care.boot.ticket.ReservationDTO">
+        <result column="reservation_id" property="reservationId"/>
+        <result column="concert_id" property="concertId"/>
+        <result column="id" property="id"/>
+        <result column="event_type" property="eventType"/>
+        <result column="reserved_at" property="reservedAt"/>
+    </resultMap>
 
-<select id="getAllReservations" resultMap="reservationResultMap">
-    SELECT * FROM Reservation
-</select>
-
+    <select id="selectAllReservations" resultMap="reservationResultMap">
+        SELECT * FROM Reservation
+    </select>
 
 
 </mapper>
