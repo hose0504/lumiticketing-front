@@ -145,7 +145,7 @@ public class MemberController {
         return (user == null) ? "session not found" : user.toString();
     }
     
-    @RequestMapping("boot")
+
     @GetMapping("/export-reservations")
     public void exportReservations(HttpServletResponse response) throws IOException {
         List<ReservationDTO> list = ticketService.getAllReservations();
