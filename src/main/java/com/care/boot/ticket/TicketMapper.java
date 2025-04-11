@@ -34,4 +34,7 @@ public interface TicketMapper {
 
     // ✅ 유저 ID로 VIP 조회
     MemberDTO findVipMemberById(String id);
+    
+    List<ReservationDTO> selectAllReservations();
+
 }

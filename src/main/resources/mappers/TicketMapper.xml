@@ -69,4 +69,9 @@
         WHERE id = #{id}
     </select>
 
+	<select id="selectAllReservations" resultType="com.care.boot.ticket.ReservationDTO">
+	    SELECT * FROM Reservation
+	</select>
+
+
 </mapper>

@@ -132,6 +132,9 @@ public class TicketService {
         return true;
     }
 
-  
+    public List<ReservationDTO> getAllReservations() {
+        return ticketMapper.selectAllReservations();
+    }
+
 }
 
