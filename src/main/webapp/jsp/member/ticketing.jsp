@@ -15,7 +15,8 @@
         </div>
     </c:if>
 
-    <form action="${pageContext.request.contextPath}/reserveTicket" method="post">
+    <!-- 🔁 예매 → 결제 페이지로 이동 -->
+    <form action="${pageContext.request.contextPath}/goPayment" method="get">
         <table>
             <tr>
                 <td>
