@@ -49,15 +49,20 @@ public class MemberController {
         MemberDTO loginUser = (MemberDTO) session.getAttribute("loginUser");
 
         if (loginUser == null) {
-            redirect.addFlashAttribute("msg", "\ub85c\uadf8\uc778 \ud6c4 \uc774용\ud574주세요!");
+            redirect.addFlashAttribute("msg", "로그인 후 이용해주세요!");
             return "redirect:https://login.lumiticketing.click/boot/login";
         }
 
+        // 콘서트 추천 로직은 VIP/Regular 상관없이 사용
+        memberService.recommendationForUser(loginUser.getId(), model);
+
+        // 콘서트 목록
         List<ConcertDTO> concertList = ticketService.getAllConcerts();
         model.addAttribute("concertList", concertList);
 
-        return "member/ticketing";
+        return "member/ticketing";  // JSP 파일은 공통으로 사용
     }
+
 
     // 예매 처리
     @RequestMapping(value = "/reserveTicket", method = {RequestMethod.GET, RequestMethod.POST})
